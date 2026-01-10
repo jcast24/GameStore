@@ -6,5 +6,5 @@ public record GameDto(
         string Name,
         string Genre,
         decimal Price,
-        DateOnly ReleaseData
+        DateOnly ReleaseDate
         );
