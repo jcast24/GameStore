@@ -19,20 +19,29 @@ List<GameDto> games = [
     new GameDto(10, "Grand Theft Auto III", "Action-Adventure", 13.99M, new DateOnly(2001, 10, 22)),
 ];
 
-
-
 app.MapGet("/games", () => games);
 
-app.MapGet("/games/{id}", (int id) => games.Find(game => game.Id == id)).WithName(GetGameEndpointName);
+app.MapGet("/games/{id}", (int id) =>
+{
+    var game = games.Find(game => game.Id == id);
 
-app.MapPost("/games/addgame", (GameDto newGame) =>
+    if (game is null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(game);
+
+}).WithName(GetGameEndpointName);
+
+app.MapPost("/games/addgame", (CreateGameDto newGame) =>
 {
     GameDto game = new(
-            games.Count + 1,
-            newGame.Name,
-            newGame.Genre,
-            newGame.Price,
-            newGame.ReleaseDate
+        games.Count + 1,
+        newGame.Name,
+        newGame.GameGenre,
+        newGame.Price,
+        newGame.ReleaseDate
             );
 
     games.Add(game);
@@ -40,6 +49,18 @@ app.MapPost("/games/addgame", (GameDto newGame) =>
     // 201 response, game has been Created
     // return payload of the game created
     return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
+});
+
+app.MapDelete("/games/deletegame/{id}", (int id) =>
+{
+    var game = games.Find(game => game.Id == id);
+    if (game is null)
+    {
+        return Results.NotFound();
+    }
+
+    games.Remove(game);
+    return Results.NoContent();
 });
 
 app.Run();
