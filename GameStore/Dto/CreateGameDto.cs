@@ -4,7 +4,7 @@ namespace GameStore.Dto;
 
 public record CreateGameDto(
     [Required][StringLength(50)] string Name,
-    [Required][StringLength(30)] string GameGenre,
-    decimal Price,
+    [Range(1, 50)] int GenreId,
+    [Range(1, 100)] decimal Price,
     DateOnly ReleaseDate
 );
