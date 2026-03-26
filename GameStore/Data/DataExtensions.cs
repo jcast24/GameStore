@@ -17,7 +17,8 @@ public static class DataExtensions
     public static void AddGameStoreDb(this WebApplicationBuilder builder)
     {
         // Add DbContext via DI 
-        var connString = builder.Configuration.GetConnectionString("GameStore"); // read configuation from appsettings.json
+        var connString =
+            builder.Configuration.GetConnectionString("GameStore"); // read configuration from appsettings.json
 
         // register db context with service container in prep for DI 
         builder.Services.AddScoped<GameStoreContext>();
